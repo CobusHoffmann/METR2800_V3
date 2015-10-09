@@ -10,6 +10,10 @@
 
 #include <avr/io.h>
 
+#define STOP 0
+#define FORWARD 1
+#define REVERSE 2
+
 struct Motor;
 
 void forward(struct Motor motor);
