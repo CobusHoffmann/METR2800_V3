@@ -22,7 +22,7 @@
 
 #define STOP 0
 #define FORWARD 1
-#define REVERSE 2
+#define BACKWARD 2
 
 #define MAX_Motors 2
 
@@ -39,7 +39,7 @@ struct MotorList availableMotors;
 
 void addMotorToList(struct Motor motor);
 
-void initMotor(struct Motor motor);
+void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr);
 
 void forward(struct Motor motor);
 

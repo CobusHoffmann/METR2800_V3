@@ -20,13 +20,15 @@ struct MotorList{
 	struct Motor mlist[MAX_Motors];
 };
 
-void initMotor(struct Motor motor){
+void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr){
 	/*
 	 * This function will initialise the direction registers
 	 * for the motor specified. Make sure to add the motor
 	 * pins to the lower 4 bits of the port specified.
 	 */
 
+	motor.ddr=ddrAddr;
+	motor.prt=prtAddr;
 	*motor.ddr |= 0x0F;       				  // set lower 4bites to 1, specifying output
 
 	addMotorToList(motor);					  //add the motor to the list of available motors
@@ -65,21 +67,73 @@ void initTimer0(){
 
 }
 
+void forward(struct Motor motor){
+	/*
+	 * Se the dir flag to FORWARD for motor
+	 */
+
+	motor.dir=FORWARD;
+}
+
+void backward(struct Motor motor){
+	/*
+	 * Set the dir flag to BACKWARD for motor
+	 */
+
+	motor.dir=BACKWARD;
+}
+
+void stop(struct Motor motor){
+	/*
+	 * Set the dir flag to STOP for motor
+	 */
+
+	motor.dir=STOP;
+}
+
+
 ISR(TIMER0_COMPA_vect){
 	/* This is the code to be run once timer reaches
 	 * 20 ticks
 	 */
 
-	for(int i=0; i<=num_motors; i++){
-		switch (availableMotors.mlist.state){
+	for(int i=0; i<num_motors; i++){
+		switch (availableMotors.mlist[i].dir){
+		case FORWARD:
+			if(availableMotors.mlist[i].dir<4){
+				availableMotors.mlist[i].dir++;
+			}else{
+				availableMotors.mlist[i].dir=1;
+			}break;
+		case BACKWARD:
+			if(availableMotors.mlist[i].dir>1){
+				availableMotors.mlist[i].dir--;
+			}else{
+				availableMotors.mlist[i].dir=4;
+			}break;
+
+		case STOP:
+			//Do nothing
+			break;
+		}
+
+		switch (availableMotors.mlist[i].state){
 
 		case 1:
+			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB4); original code
+			*availableMotors.mlist[i].prt=0b000010101;
 			break;
 		case 2:
+			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB3); original code
+			*availableMotors.mlist[i].prt=0b000001101;
 			break;
 		case 3:
+			//ORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB3); original code
+			*availableMotors.mlist[i].prt=0b000001011;
 			break;
 		case 4:
+			//PORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB4); original code
+			*availableMotors.mlist[i].prt= 0b000010011;
 			break;
 
 		}
