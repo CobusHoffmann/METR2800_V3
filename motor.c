@@ -6,22 +6,8 @@
  */
 #include "motor.h"
 
-
-
-//struct Motor{
-//	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
-//
-//	volatile uint8_t dir;   					//Direction either FORWARD, REVERSE or STOP
-//
-//	volatile uint8_t state; 					//The Bipolar motors, in full step have 4 states,
-//									//and need to be stepped through correctly
-//
-//
-//};
-//
-//struct MotorList{
-//	struct Motor mlist[MAX_Motors];
-//};
+//set number of initial motors equal to 0
+num_motors=0;
 
 void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr){
 	/*
@@ -46,7 +32,7 @@ void addMotorToList(struct Motor motor){
 	 */
 
 	availableMotors.mlist[num_motors]=motor;  //add the motor to the list of available motors
-	num_motors+=1;							  //increment the number of motors set up
+	num_motors++;							  //increment the number of motors set up
 
 }
 

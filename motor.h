@@ -27,7 +27,8 @@
 
 #define MAX_Motors 2
 
-volatile int num_motors;
+int num_motors;
+
 
 //structure to hold all the specific motor variables
 struct Motor{
