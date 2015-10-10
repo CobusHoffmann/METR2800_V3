@@ -43,3 +43,35 @@ void addMotorToList(struct Motor motor){
 	num_motors++;							  //increment the number of motors set up
 
 }
+
+void initTimer0(){
+/*
+ * This fuction will set up the Timer/Counter0
+ * in CTC mode.
+ */
+
+	//Set CTC mode
+	TCCR0A |=(1<<WGM01);
+
+
+	//Set the frequency of output to 400Hz
+	OCR0A = 20;
+
+	//Set interupt enable on ouput compare match
+		TIMSK0 |=(1<<OCIE0A);
+
+	//Clock div 1024
+	TCCR0B |=(1<<CS02)|(1<<CS00);
+
+}
+
+ISR(TIMER0_COMPA_vect){
+	/* This is the code to be run once timer reaches
+	 * 20 ticks
+	 */
+}
+
+
+
+
+

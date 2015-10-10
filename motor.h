@@ -18,6 +18,7 @@
 
 #include <avr/io.h>
 #include <avr/portpins.h>
+#include <avr/interrupt.h>
 
 #define STOP 0
 #define FORWARD 1
@@ -47,5 +48,7 @@ void backward(struct Motor motor);
 void stop(struct Motor motor);
 
 void initTimer0();
+
+ISR(TIMER0_COMPA_vect);
 
 #endif /* MOTOR_H_ */
