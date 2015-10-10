@@ -7,8 +7,8 @@
 #include "motor.h"
 
 struct Motor{
-	volatile uint8_t *ddrc, *prt;
-	uint8_t dir;
+	volatile uint8_t *ddrc, *prt;   //Pointers to the addres of the registers
+	uint8_t dir;   //Direction either FORWARD, REVERSE or STOP
 
 };
 
