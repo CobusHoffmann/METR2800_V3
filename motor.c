@@ -58,7 +58,7 @@ void initTimer0(){
 	OCR0A = 20;
 
 	//Set interupt enable on ouput compare match
-		TIMSK0 |=(1<<OCIE0A);
+	TIMSK0 |=(1<<OCIE0A);
 
 	//Clock div 1024
 	TCCR0B |=(1<<CS02)|(1<<CS00);
@@ -69,6 +69,22 @@ ISR(TIMER0_COMPA_vect){
 	/* This is the code to be run once timer reaches
 	 * 20 ticks
 	 */
+
+	for(int i=0; i<=num_motors; i++){
+		switch (availableMotors.mlist.state){
+
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+
+		}
+
+	}
 }
 
 
