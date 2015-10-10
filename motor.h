@@ -17,6 +17,7 @@
 #define MOTOR_H_
 
 #include <avr/io.h>
+#include <stdio.h>
 #include <avr/portpins.h>
 #include <avr/interrupt.h>
 
@@ -26,13 +27,23 @@
 
 #define MAX_Motors 2
 
-volatile int num_motors =0;
+volatile int num_motors;
 
 //structure to hold all the specific motor variables
-struct Motor;
+struct Motor{
+	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
+
+	volatile uint8_t dir;   					//Direction either FORWARD, REVERSE or STOP
+
+	volatile uint8_t state; 					//The Bipolar motors, in full step have 4 states,
+									//and need to be stepped through correctly
+
+};
 
 //struct that can contain an array of structs
-struct MotorList;
+struct MotorList{
+	struct Motor mlist[MAX_Motors];
+};
 
 //Create List of available motors that can add new motors
 struct MotorList availableMotors;
@@ -46,6 +57,8 @@ void forward(struct Motor motor);
 void backward(struct Motor motor);
 
 void stop(struct Motor motor);
+
+void setNumMotors(int num);
 
 void initTimer0();
 

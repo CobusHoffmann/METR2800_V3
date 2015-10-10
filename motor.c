@@ -6,19 +6,22 @@
  */
 #include "motor.h"
 
-struct Motor{
-	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
-
-	uint8_t dir;   					//Direction either FORWARD, REVERSE or STOP
-
-	uint8_t state; 					//The Bipolar motors, in full step have 4 states,
-									//and need to be stepped through correctly
 
 
-};
-struct MotorList{
-	struct Motor mlist[MAX_Motors];
-};
+//struct Motor{
+//	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
+//
+//	volatile uint8_t dir;   					//Direction either FORWARD, REVERSE or STOP
+//
+//	volatile uint8_t state; 					//The Bipolar motors, in full step have 4 states,
+//									//and need to be stepped through correctly
+//
+//
+//};
+//
+//struct MotorList{
+//	struct Motor mlist[MAX_Motors];
+//};
 
 void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr){
 	/*
@@ -29,8 +32,9 @@ void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *
 
 	motor.ddr=ddrAddr;
 	motor.prt=prtAddr;
-	*motor.ddr |= 0x0F;       				  // set lower 4bites to 1, specifying output
-
+	*motor.ddr |= 0x1F;       				  // set lower 4bites to 1, specifying output
+	motor.dir=STOP;
+	motor.state=1;
 	addMotorToList(motor);					  //add the motor to the list of available motors
 }
 
@@ -42,7 +46,7 @@ void addMotorToList(struct Motor motor){
 	 */
 
 	availableMotors.mlist[num_motors]=motor;  //add the motor to the list of available motors
-	num_motors++;							  //increment the number of motors set up
+	num_motors+=1;							  //increment the number of motors set up
 
 }
 
@@ -91,34 +95,41 @@ void stop(struct Motor motor){
 	motor.dir=STOP;
 }
 
+void setNumMotors(int num){
+	num_motors=num;
+}
+
 
 ISR(TIMER0_COMPA_vect){
 	/* This is the code to be run once timer reaches
-	 * 20 ticks
+	 * 20 ticks. It is not perfect as it will clear
+	 * and set pins on entire port even though only
+	 * 5 pins of the port is used.
 	 */
-
+	cli();
 	for(int i=0; i<num_motors; i++){
 		switch (availableMotors.mlist[i].dir){
 		case FORWARD:
+			//Want to move forward so increment state by 1
 			if(availableMotors.mlist[i].dir<4){
 				availableMotors.mlist[i].dir++;
 			}else{
 				availableMotors.mlist[i].dir=1;
 			}break;
 		case BACKWARD:
+			//Want to move backwards so decrement state by 1
 			if(availableMotors.mlist[i].dir>1){
 				availableMotors.mlist[i].dir--;
 			}else{
 				availableMotors.mlist[i].dir=4;
 			}break;
-
 		case STOP:
-			//Do nothing
+			//Don't want to move so
 			break;
 		}
 
 		switch (availableMotors.mlist[i].state){
-
+		//Bit 0 on each por is set as the H-Bridge enable pin
 		case 1:
 			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB4); original code
 			*availableMotors.mlist[i].prt=0b000010101;
@@ -139,6 +150,7 @@ ISR(TIMER0_COMPA_vect){
 		}
 
 	}
+	sei();
 }
 
 
