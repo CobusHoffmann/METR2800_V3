@@ -2,13 +2,30 @@
  * motor.h
  *
  *  Created on: 9 Oct 2015
- *      Author: Cobus Hoffmann
+ *      Author:
+ *       - Cobus Hoffmann
+ *       - Eliza Mcechnie
+ *       - Liam Williams
  *
- *  The motor code needs to be able to control two
- *  stepper motors on different ports with one timer.
  *
- *  Timer0 is used here to control the stepping
- *  of the stepper motors
+ * These motor.c and motor.h files implement the functions
+ * needed to setup and control stepper motors.
+ * The default max number of motors is set to two,
+ * this can be changed to how many ever.
+ *
+ * To create multiple motors just create a
+ * struct Motor mName and run the initMotor()
+ * function.
+ *
+ * Each motor needs an entire port at the moment,
+ * with the assumption that the enable pin is
+ * wired to bit 0.
+ *
+ * The frequency is hard coded to 400Hz, this
+ * can be changed in the initADC0() function.
+ *
+ *
+ *
  *
  *
  */
