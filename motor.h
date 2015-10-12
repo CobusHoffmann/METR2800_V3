@@ -24,10 +24,6 @@
  * The frequency is hard coded to 400Hz, this
  * can be changed in the initADC0() function.
  *
- *
- *
- *
- *
  */
 
 #ifndef MOTOR_H_
@@ -35,8 +31,10 @@
 
 #include <avr/io.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <avr/portpins.h>
 #include <avr/interrupt.h>
+#include "UART.h"
 
 #define STOP 0
 #define FORWARD 1
@@ -47,11 +45,13 @@
 
 //structure to hold all the specific motor variables
 struct Motor{
+	uint8_t index;
+
 	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
 
-	volatile uint8_t *dir;   					//Direction either FORWARD, REVERSE or STOP
+	volatile uint8_t *dir; 					//Direction either FORWARD, REVERSE or STOP
 
-	volatile uint8_t *state; 					//The Bipolar motors, in full step have 4 states,
+	volatile uint8_t *state;					//The Bipolar motors, in full step have 4 states,
 									//and need to be stepped through correctly
 
 };
@@ -66,7 +66,7 @@ struct MotorList availableMotors;
 
 void addMotorToList(struct Motor motor);
 
-void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr);
+void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr, volatile uint8_t *dir, volatile uint8_t *state);
 
 void forward(struct Motor motor);
 
@@ -77,6 +77,11 @@ void stop(struct Motor motor);
 void setNumMotors(int num);
 
 void initTimer0();
+int getState(struct Motor motor);
+
+int getDir(struct Motor motor);
+
+struct Motor getMotorAtIndex(int index);
 
 ISR(TIMER0_COMPA_vect);
 

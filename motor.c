@@ -6,21 +6,23 @@
  */
 #include "motor.h"
 
+
 //set number of initial motors equal to 0
 int num_motors=0;
 
-void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr){
+void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr, volatile uint8_t *dir, volatile uint8_t *state){
 	/*
 	 * This function will initialise the direction registers
 	 * for the motor specified. Make sure to add the motor
 	 * pins to the lower 4 bits of the port specified.
 	 */
+	motor.index=num_motors;
 
 	motor.ddr=ddrAddr;
 	motor.prt=prtAddr;
-	*motor.ddr |= 0x1F;       				  // set lower 4bites to 1, specifying output
-	*motor.dir=STOP;
-	*motor.state=1;
+	*motor.ddr |= 0xFF;       				  // set lower 4bites to 1, specifying output
+	motor.dir= dir;
+	motor.state= state;
 	addMotorToList(motor);					  //add the motor to the list of available motors
 }
 
@@ -62,7 +64,7 @@ void forward(struct Motor motor){
 	 * Se the dir flag to FORWARD for motor
 	 */
 
-	*motor.dir=FORWARD;
+	*getMotorAtIndex(motor.index).dir=FORWARD;
 }
 
 void backward(struct Motor motor){
@@ -70,7 +72,7 @@ void backward(struct Motor motor){
 	 * Set the dir flag to BACKWARD for motor
 	 */
 
-	*motor.dir=BACKWARD;
+	*getMotorAtIndex(motor.index).dir=BACKWARD;
 }
 
 void stop(struct Motor motor){
@@ -78,11 +80,24 @@ void stop(struct Motor motor){
 	 * Set the dir flag to STOP for motor
 	 */
 
-	*motor.dir=STOP;
+	*getMotorAtIndex(motor.index).dir=STOP;
 }
 
 void setNumMotors(int num){
 	num_motors=num;
+}
+
+int getState(struct Motor motor){
+	return *motor.state;
+}
+
+int getDir(struct Motor motor){
+	return *motor.dir;
+}
+
+struct Motor getMotorAtIndex(int index){
+	return availableMotors.mlist[index];
+
 }
 
 
@@ -94,49 +109,51 @@ ISR(TIMER0_COMPA_vect){
 	 */
 	cli();
 	for(int i=0; i<num_motors; i++){
-		switch (*availableMotors.mlist[i].state){
+		switch (*(getMotorAtIndex(i).dir)){
 		case FORWARD:
 			//Want to move forward so increment state by 1
-			if(*availableMotors.mlist[i].state<4){
-				*availableMotors.mlist[i].state+=1;
+			if(*(getMotorAtIndex(i).state)<4){
+				(*(getMotorAtIndex(i).state))+=1;
 			}else{
-				*availableMotors.mlist[i].state=1;
+				(*(getMotorAtIndex(i).state))=1;
 			}break;
 		case BACKWARD:
 			//Want to move backwards so decrement state by 1
-			if(*availableMotors.mlist[i].state>1){
-				*availableMotors.mlist[i].state-=1;
+			if((*(getMotorAtIndex(i).state))>1){
+				(*(getMotorAtIndex(i).state))-=1;
 			}else{
-				*availableMotors.mlist[i].state=4;
+				(*(getMotorAtIndex(i).state))=4;
 			}break;
 		case STOP:
 			//Don't want to move so
 			break;
 		}
 
-		switch (*availableMotors.mlist[i].state){
+		switch (*(getMotorAtIndex(i).state)){
 		//Bit 0 on each por is set as the H-Bridge enable pin
 		case 1:
 			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB4); original code
-			*availableMotors.mlist[i].prt=0b000010101;
+			(*(getMotorAtIndex(i).prt))=0b000010101;
 			break;
 		case 2:
 			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB3); original code
-			*availableMotors.mlist[i].prt=0b000001101;
+			(*(getMotorAtIndex(i).prt))=0b000001101;
 			break;
 		case 3:
 			//ORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB3); original code
-			*availableMotors.mlist[i].prt=0b000001011;
+			(*(getMotorAtIndex(i).prt))=0b000001011;
 			break;
 		case 4:
 			//PORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB4); original code
-			*availableMotors.mlist[i].prt= 0b000010011;
+			(*(getMotorAtIndex(i).prt))=0b000010011;
 			break;
 
 		}
 
 	}
 	sei();
+
+	//PORTB^=0xff;
 }
 
 
