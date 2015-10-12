@@ -5,13 +5,14 @@
  *      Author: Cobus
  */
 
+#define F_CPU 16000000ul
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include "motor.h"
 
 
-#define F_CPU 16000000ul
+
 
 
 int main (){
@@ -24,13 +25,6 @@ int main (){
 	forward(motorb);
 
 	while(1){
-		//Main program loop
-		//_delay_ms(1000);
-
-
-
-
-
 
 
 	}
