@@ -7,7 +7,7 @@
 #include "motor.h"
 
 //set number of initial motors equal to 0
-num_motors=0;
+int num_motors=0;
 
 void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr){
 	/*
@@ -19,8 +19,8 @@ void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *
 	motor.ddr=ddrAddr;
 	motor.prt=prtAddr;
 	*motor.ddr |= 0x1F;       				  // set lower 4bites to 1, specifying output
-	motor.dir=STOP;
-	motor.state=1;
+	*motor.dir=STOP;
+	*motor.state=1;
 	addMotorToList(motor);					  //add the motor to the list of available motors
 }
 
@@ -62,7 +62,7 @@ void forward(struct Motor motor){
 	 * Se the dir flag to FORWARD for motor
 	 */
 
-	motor.dir=FORWARD;
+	*motor.dir=FORWARD;
 }
 
 void backward(struct Motor motor){
@@ -70,7 +70,7 @@ void backward(struct Motor motor){
 	 * Set the dir flag to BACKWARD for motor
 	 */
 
-	motor.dir=BACKWARD;
+	*motor.dir=BACKWARD;
 }
 
 void stop(struct Motor motor){
@@ -78,7 +78,7 @@ void stop(struct Motor motor){
 	 * Set the dir flag to STOP for motor
 	 */
 
-	motor.dir=STOP;
+	*motor.dir=STOP;
 }
 
 void setNumMotors(int num){
@@ -94,27 +94,27 @@ ISR(TIMER0_COMPA_vect){
 	 */
 	cli();
 	for(int i=0; i<num_motors; i++){
-		switch (availableMotors.mlist[i].dir){
+		switch (*availableMotors.mlist[i].state){
 		case FORWARD:
 			//Want to move forward so increment state by 1
-			if(availableMotors.mlist[i].dir<4){
-				availableMotors.mlist[i].dir++;
+			if(*availableMotors.mlist[i].state<4){
+				*availableMotors.mlist[i].state+=1;
 			}else{
-				availableMotors.mlist[i].dir=1;
+				*availableMotors.mlist[i].state=1;
 			}break;
 		case BACKWARD:
 			//Want to move backwards so decrement state by 1
-			if(availableMotors.mlist[i].dir>1){
-				availableMotors.mlist[i].dir--;
+			if(*availableMotors.mlist[i].state>1){
+				*availableMotors.mlist[i].state-=1;
 			}else{
-				availableMotors.mlist[i].dir=4;
+				*availableMotors.mlist[i].state=4;
 			}break;
 		case STOP:
 			//Don't want to move so
 			break;
 		}
 
-		switch (availableMotors.mlist[i].state){
+		switch (*availableMotors.mlist[i].state){
 		//Bit 0 on each por is set as the H-Bridge enable pin
 		case 1:
 			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB4); original code

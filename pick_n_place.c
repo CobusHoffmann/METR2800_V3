@@ -21,10 +21,19 @@ int main (){
 	struct Motor motora,motorb;
 	initMotor(motora,&DDRC,&PORTC);
 	forward(motora);
-	initMotor(motorb,&DDRB,&PORTB);
+	initMotor(motorb,&DDRD,&PORTD);
 	forward(motorb);
 
 	while(1){
+
+		_delay_ms(1000);
+		stop(motora);
+		_delay_ms(200);
+		backward(motora);
+		_delay_ms(1000);
+		stop(motora);
+		_delay_ms(200);
+		forward(motora);
 
 
 	}

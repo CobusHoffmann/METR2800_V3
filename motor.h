@@ -27,16 +27,14 @@
 
 #define MAX_Motors 2
 
-int num_motors;
-
 
 //structure to hold all the specific motor variables
 struct Motor{
 	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
 
-	volatile uint8_t dir;   					//Direction either FORWARD, REVERSE or STOP
+	volatile uint8_t *dir;   					//Direction either FORWARD, REVERSE or STOP
 
-	volatile uint8_t state; 					//The Bipolar motors, in full step have 4 states,
+	volatile uint8_t *state; 					//The Bipolar motors, in full step have 4 states,
 									//and need to be stepped through correctly
 
 };

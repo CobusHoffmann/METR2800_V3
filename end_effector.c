@@ -32,10 +32,6 @@ void setChannel(volatile uint8_t adcPin){
 	 * ADC channels there are only 9.
 	 * ADC0->ADC8
 	 */
-
-
-
-
 }
 
 void turnOnEM(){
