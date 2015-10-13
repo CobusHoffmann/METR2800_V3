@@ -11,7 +11,7 @@
 #include <avr/io.h>
 
 void initUART(unsigned int ubrr);
-void printStr(unsigned char charArray[]);
+void printStr(char *s);
 void transmitUART(unsigned char data);
 
 

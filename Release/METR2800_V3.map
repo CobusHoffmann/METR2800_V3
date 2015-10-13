@@ -10,6 +10,15 @@ Archive member included because of file (symbol)
 Allocating common symbols
 Common symbol       size              file
 
+b                   0x2               ./pick_n_place.o
+num_blocks          0x1               ./pick_n_place.o
+stateb              0x1               ./motor.o
+steps               0x2               ./motor.o
+dirb                0x1               ./motor.o
+statea              0x1               ./motor.o
+bin                 0x1               ./pick_n_place.o
+s                   0x32              ./pick_n_place.o
+dira                0x1               ./motor.o
 availableMotors     0x12              ./motor.o
 
 Memory Configuration
@@ -128,7 +137,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x698
+.text           0x00000000      0x602
  *(.vectors)
  .vectors       0x00000000       0x68 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
                 0x00000000                __vectors
@@ -225,113 +234,139 @@ END GROUP
                 0x000000bc        0xe ./UART.o
                 0x000000bc                transmitUART
  .text.printStr
-                0x000000ca       0x24 ./UART.o
+                0x000000ca       0x18 ./UART.o
                 0x000000ca                printStr
  .text.setChannel
-                0x000000ee       0x14 ./end_effector.o
-                0x000000ee                setChannel
+                0x000000e2       0x14 ./end_effector.o
+                0x000000e2                setChannel
  .text.turnOnEM
-                0x00000102        0x4 ./end_effector.o
-                0x00000102                turnOnEM
+                0x000000f6        0x4 ./end_effector.o
+                0x000000f6                turnOnEM
  .text.turnOffEM
-                0x00000106        0x4 ./end_effector.o
-                0x00000106                turnOffEM
+                0x000000fa        0x4 ./end_effector.o
+                0x000000fa                turnOffEM
  .text.turnOnIR
-                0x0000010a        0x4 ./end_effector.o
-                0x0000010a                turnOnIR
+                0x000000fe        0x4 ./end_effector.o
+                0x000000fe                turnOnIR
  .text.turnOffIR
-                0x0000010e        0x4 ./end_effector.o
-                0x0000010e                turnOffIR
- .text.initADC  0x00000112       0x14 ./end_effector.o
-                0x00000112                initADC
- .text.initEF   0x00000126        0x8 ./end_effector.o
-                0x00000126                initEF
+                0x00000102        0x4 ./end_effector.o
+                0x00000102                turnOffIR
+ .text.initADC  0x00000106       0x14 ./end_effector.o
+                0x00000106                initADC
+ .text.initEF   0x0000011a        0x8 ./end_effector.o
+                0x0000011a                initEF
  .text.analogRead
-                0x0000012e        0xa ./end_effector.o
-                0x0000012e                analogRead
+                0x00000122        0xa ./end_effector.o
+                0x00000122                analogRead
  .text.startADC0
-                0x00000138        0xc ./end_effector.o
-                0x00000138                startADC0
+                0x0000012c        0xc ./end_effector.o
+                0x0000012c                startADC0
  .text.__vector_21
-                0x00000144       0x2c ./end_effector.o
-                0x00000144                __vector_21
+                0x00000138       0x2c ./end_effector.o
+                0x00000138                __vector_21
+ .text.initMotors
+                0x00000164       0x14 ./motor.o
+                0x00000164                initMotors
+ .text.move_forwardA
+                0x00000178        0x8 ./motor.o
+                0x00000178                move_forwardA
+ .text.move_backwardA
+                0x00000180        0x8 ./motor.o
+                0x00000180                move_backwardA
+ .text.stopA    0x00000188        0x6 ./motor.o
+                0x00000188                stopA
+ .text.move_forwardB
+                0x0000018e        0x8 ./motor.o
+                0x0000018e                move_forwardB
+ .text.move_backwardB
+                0x00000196        0x8 ./motor.o
+                0x00000196                move_backwardB
+ .text.stopB    0x0000019e        0x6 ./motor.o
+                0x0000019e                stopB
+ .text.moveA    0x000001a4       0x2c ./motor.o
+                0x000001a4                moveA
+ .text.moveB    0x000001d0       0x2c ./motor.o
+                0x000001d0                moveB
+ .text.getSteps
+                0x000001fc        0xa ./motor.o
+                0x000001fc                getSteps
  .text.addMotorToList
-                0x00000170       0x6e ./motor.o
-                0x00000170                addMotorToList
+                0x00000206       0x68 ./motor.o
+                0x00000206                addMotorToList
  .text.initMotor
-                0x000001de       0x8c ./motor.o
-                0x000001de                initMotor
+                0x0000026e       0x94 ./motor.o
+                0x0000026e                initMotor
  .text.initTimer0
-                0x0000026a       0x1c ./motor.o
-                0x0000026a                initTimer0
+                0x00000302       0x1c ./motor.o
+                0x00000302                initTimer0
  .text.setNumMotors
-                0x00000286        0xa ./motor.o
-                0x00000286                setNumMotors
+                0x0000031e        0x6 ./motor.o
+                0x0000031e                setNumMotors
  .text.getState
-                0x00000290       0x48 ./motor.o
-                0x00000290                getState
- .text.getDir   0x000002d8       0x48 ./motor.o
-                0x000002d8                getDir
+                0x00000324       0x48 ./motor.o
+                0x00000324                getState
+ .text.getDir   0x0000036c       0x48 ./motor.o
+                0x0000036c                getDir
  .text.getMotorAtIndex
-                0x00000320       0x1c ./motor.o
-                0x00000320                getMotorAtIndex
- .text.forward  0x0000033c       0x42 ./motor.o
-                0x0000033c                forward
+                0x000003b4       0x1c ./motor.o
+                0x000003b4                getMotorAtIndex
+ .text.forward  0x000003d0       0x54 ./motor.o
+                0x000003d0                forward
  .text.backward
-                0x0000037e       0x42 ./motor.o
-                0x0000037e                backward
- .text.stop     0x000003c0       0x40 ./motor.o
-                0x000003c0                stop
+                0x00000424       0x54 ./motor.o
+                0x00000424                backward
+ .text.stop     0x00000478       0x52 ./motor.o
+                0x00000478                stop
  .text.__vector_14
-                0x00000400      0x1a6 ./motor.o
-                0x00000400                __vector_14
+                0x000004ca       0xb8 ./motor.o
+                0x000004ca                __vector_14
  .text.startup.main
-                0x000005a6       0xee ./pick_n_place.o
-                0x000005a6                main
+                0x00000582       0x7c ./pick_n_place.o
+                0x00000582                main
  .text.libgcc.mul
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
- .text.libgcc   0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
- .text.libgcc   0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.fixed
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.mul
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
- .text.libgcc   0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
-                0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
-                0x00000694                . = ALIGN (0x2)
+                0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+                0x000005fe                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000694        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x00000694                exit
-                0x00000694                _exit
+ .fini9         0x000005fe        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000005fe                exit
+                0x000005fe                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -350,11 +385,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000694        0x4 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x000005fe        0x4 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x00000698                _etext = .
+                0x00000602                _etext = .
 
-.data           0x00800100        0x2 load address 0x00000698
+.data           0x00800100        0x2 load address 0x00000602
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
@@ -376,7 +411,7 @@ END GROUP
                 0x00800102                _edata = .
                 0x00800102                PROVIDE (__data_end, .)
 
-.bss            0x00800102       0x15
+.bss            0x00800102       0x50
                 0x00800102                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800102        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
@@ -392,21 +427,31 @@ END GROUP
                 0x00800102        0x1 ./end_effector.o
                 0x00800102                convertStatus
  .bss.num_motors
-                0x00800103        0x2 ./motor.o
+                0x00800103        0x1 ./motor.o
                 0x00800103                num_motors
  *(COMMON)
- COMMON         0x00800105       0x12 ./motor.o
-                0x00800105                availableMotors
-                0x00800117                PROVIDE (__bss_end, .)
-                0x00000698                __data_load_start = LOADADDR (.data)
-                0x0000069a                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800104       0x18 ./motor.o
+                0x00800104                stateb
+                0x00800105                steps
+                0x00800107                dirb
+                0x00800108                statea
+                0x00800109                dira
+                0x0080010a                availableMotors
+ COMMON         0x0080011c       0x36 ./pick_n_place.o
+                0x0080011c                b
+                0x0080011e                num_blocks
+                0x0080011f                bin
+                0x00800120                s
+                0x00800152                PROVIDE (__bss_end, .)
+                0x00000602                __data_load_start = LOADADDR (.data)
+                0x00000604                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800117        0x0
-                0x00800117                PROVIDE (__noinit_start, .)
+.noinit         0x00800152        0x0
+                0x00800152                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800117                PROVIDE (__noinit_end, .)
-                0x00800117                _end = .
-                0x00800117                PROVIDE (__heap_start, .)
+                0x00800152                PROVIDE (__noinit_end, .)
+                0x00800152                _end = .
+                0x00800152                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)

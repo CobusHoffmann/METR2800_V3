@@ -8,7 +8,123 @@
 
 
 //set number of initial motors equal to 0
-int num_motors=0;
+volatile uint8_t num_motors=0;
+
+volatile uint8_t dira,dirb,statea,stateb;
+
+volatile uint16_t steps;
+
+
+void initMotors(){
+	/************************************************************************/
+		/* Using 8 bit Timer to run the motors, chosen frequency of 400Hz (400pps),
+		   this will be done with a CTC Timer setup on Timer/Counter0.
+		   This function must be run after sei()
+		                                                                     */
+		/************************************************************************/
+
+		dira =STOP;
+		statea=1;
+
+		dirb=STOP;
+		stateb=1;
+
+
+}
+
+void move_forwardA(){
+	dira = FORWARD;
+}
+
+void move_backwardA(){
+	dira = BACKWARD;
+}
+
+void stopA(){
+	dira = STOP;
+}
+
+void move_forwardB(){
+	dirb = FORWARD;
+}
+
+void move_backwardB(){
+	dirb = BACKWARD;
+}
+
+void stopB(){
+	dirb = STOP;
+}
+
+void moveA(){
+	/*
+	 * Motor A on port B
+	 */
+	switch(statea){
+
+		case 1:
+		PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB4);     //state_2
+		break;
+
+
+
+		case 2:
+		PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB3); //state_4
+		break;
+
+
+
+		case 3:
+		PORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB3);
+		break;
+
+
+
+		case 4:
+		PORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB4);
+		break;
+	}
+
+}
+
+void moveB(){
+	/*
+	 * Motor B on port D
+	 */
+	switch(stateb){
+
+		case 1:
+		PORTD = (0b000010101<<2);     //state_2
+		break;
+
+
+
+		case 2:
+		PORTD = (0b000001101<<2); //state_4
+		break;
+
+
+
+		case 3:
+		PORTD = (0b000001011<<2);
+		break;
+
+
+
+		case 4:
+		PORTD = (0b000010011<<2);
+		break;
+	}
+
+}
+
+uint16_t getSteps(){
+	return steps;
+}
+
+
+
+
 
 void initMotor(struct Motor motor, volatile uint8_t *ddrAddr, volatile uint8_t *prtAddr, volatile uint8_t *dir, volatile uint8_t *state){
 	/*
@@ -34,9 +150,10 @@ void addMotorToList(struct Motor motor){
 	 */
 
 	availableMotors.mlist[num_motors]=motor;  //add the motor to the list of available motors
-	num_motors++;							  //increment the number of motors set up
+	num_motors+=1;							  //increment the number of motors set up
 
 }
+
 
 void initTimer0(){
 /*
@@ -64,7 +181,7 @@ void forward(struct Motor motor){
 	 * Se the dir flag to FORWARD for motor
 	 */
 
-	*getMotorAtIndex(motor.index).dir=FORWARD;
+	*getMotorAtIndex(motor.index).dir=1;
 }
 
 void backward(struct Motor motor){
@@ -72,15 +189,14 @@ void backward(struct Motor motor){
 	 * Set the dir flag to BACKWARD for motor
 	 */
 
-	*getMotorAtIndex(motor.index).dir=BACKWARD;
+	*getMotorAtIndex(motor.index).dir=2;
 }
 
 void stop(struct Motor motor){
 	/*
 	 * Set the dir flag to STOP for motor
 	 */
-
-	*getMotorAtIndex(motor.index).dir=STOP;
+	*getMotorAtIndex(motor.index).dir=0;
 }
 
 void setNumMotors(int num){
@@ -107,53 +223,73 @@ ISR(TIMER0_COMPA_vect){
 	 * and set pins on entire port even though only
 	 * 5 pins of the port is used.
 	 */
-	cli();
-	for(int i=0; i<num_motors; i++){
-		switch (*(getMotorAtIndex(i).dir)){
+	/************************************************************************/
+		/* This ISR will increment decrement or keep the state variable constant,
+		   this will alow the move() function to not skip any steps.                                                                      */
+		/************************************************************************/
+
+		cli(); //clear the interrupt flag to allow this code to execute without interruption.
+		switch (dira){
+			case FORWARD:
+			//increment the state variable
+			if (statea<4)
+			{
+				statea ++;
+			}else{
+				statea = 1;
+			}
+				break;
+
+			case BACKWARD:
+			//Decrement the state variable
+			if (statea>1)
+			{
+				statea --;
+				}else{
+				statea = 4;
+			}
+				break;
+
+			case STOP:
+			//Do nothing
+				break;
+
+		}
+
+		switch (stateb){
 		case FORWARD:
-			//Want to move forward so increment state by 1
-			if(*(getMotorAtIndex(i).state)<4){
-				(*(getMotorAtIndex(i).state))+=1;
+					//increment the state variable
+			if (stateb<4)
+			{
+				stateb ++;
 			}else{
-				(*(getMotorAtIndex(i).state))=1;
-			}break;
-		case BACKWARD:
-			//Want to move backwards so decrement state by 1
-			if((*(getMotorAtIndex(i).state))>1){
-				(*(getMotorAtIndex(i).state))-=1;
-			}else{
-				(*(getMotorAtIndex(i).state))=4;
-			}break;
-		case STOP:
-			//Don't want to move so
-			break;
-		}
+				stateb = 1;
+			}
+				break;
 
-		switch (*(getMotorAtIndex(i).state)){
-		//Bit 0 on each por is set as the H-Bridge enable pin
-		case 1:
-			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB4); original code
-			(*(getMotorAtIndex(i).prt))=0b000010101;
-			break;
-		case 2:
-			//PORTB = (1<<PORTB0)|(1<<PORTB2)|(1<<PORTB3); original code
-			(*(getMotorAtIndex(i).prt))=0b000001101;
-			break;
-		case 3:
-			//ORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB3); original code
-			(*(getMotorAtIndex(i).prt))=0b000001011;
-			break;
-		case 4:
-			//PORTB = (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB4); original code
-			(*(getMotorAtIndex(i).prt))=0b000010011;
-			break;
+			case BACKWARD:
+			//Decrement the state variable
+			if (stateb>1)
+			{
+				stateb --;
+				}else{
+				stateb = 4;
+			}
+				break;
+
+			case STOP:
+			//Do nothing
+				break;
+
 
 		}
 
-	}
-	sei();
+		moveA();
+		moveB();
+		sei();
+			//set the interupt flag again
 
-	//PORTB^=0xff;
+
 }
 
 

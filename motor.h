@@ -43,9 +43,11 @@
 #define MAX_Motors 2
 
 
+
+
 //structure to hold all the specific motor variables
 struct Motor{
-	uint8_t index;
+	volatile uint8_t index;
 
 	volatile uint8_t *ddr, *prt;    //Pointers to the addres of the registers
 
@@ -60,6 +62,19 @@ struct Motor{
 struct MotorList{
 	struct Motor mlist[MAX_Motors];
 };
+
+
+void initMotors();
+
+void move_forwardA();
+
+void move_backwardA();
+
+void stopA();
+
+void move_forwardB();
+
+uint16_t getSteps();
 
 //Create List of available motors that can add new motors
 struct MotorList availableMotors;

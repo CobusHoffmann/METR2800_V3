@@ -20,7 +20,7 @@ void initEF(){
 	 */
 
 	//Set the EM and IR Led pins as outputs
-	DDRC = (1<<PORTC1)|(1<<PORTC2);
+	DDRC = (1<<PORTC2);
 
 	//Setup the analog to digital converter on ADC0
 	initADC();
@@ -68,7 +68,7 @@ void initADC(){
 		ADCSRA = (1<<ADEN)|(1<<ADIE)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2);
 
 		//Disable Digital input on ADC0
-		DIDR0 = (1<<ADC0D);
+		DIDR0 = (1<<ADC1D);
 
 }
 

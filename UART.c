@@ -26,23 +26,15 @@ void initUART(unsigned int ubrr){
 
 }
 
-void printStr(unsigned char charArray[]){
+void printStr(char *s){
 	/**
 	 * This Function will transmit the character array
 	 * over serial
 	 */
 
-	for(uint8_t i=0; i<sizeof(charArray); i++){
-
-		if(charArray[i]){
-			//Transmit each character individually
-			transmitUART(charArray[i]);
-		}else{
-			//Send new line charicter and exit for loop
-			//transmitUART('\n');
-			break;
-
-		}
+	while(*s){
+		transmitUART(*s);
+		s++;
 	}
 }
 
